@@ -1,0 +1,4 @@
+usage:  __APPNAME__.sh/.bat
+ -f,--file <arg>   opendds file(s) and/or directory(s) to validate
+ -q,--quiet        suppress output except for error reporting
+ -r,--recursive    search directory recursively for opendds files
