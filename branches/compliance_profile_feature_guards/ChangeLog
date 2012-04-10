@@ -1,0 +1,220 @@
+Tue Apr 10 16:08:21 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * tools/scripts/lcov.pl:
+
+          Fixing script for nightly build.
+
+Mon Apr  9 17:59:43 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * tests/DCPS/BuiltInTopic/main.cpp:
+        * tests/DCPS/BuiltInTopicTest/monitor.cpp:
+        * tests/DCPS/BuiltInTopicTest/publisher.cpp:
+
+          Corrected #includes needed for static builds.  These were not picked
+          up by the script that changed all of the others last week.
+
+        * tests/DCPS/Monitor/Messenger.mpc:
+
+          Fixed broken references to the monitoring library, caused by
+          this mpc file directly listing the project in 'libs' and 'after'
+          instead of using the provided mpb file.
+
+Fri Apr  6 13:11:11 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * tools/scripts/lcov.pl:
+
+          Cleanup of script.
+
+        * dds/DCPS/transport/framework/DataLink.h:
+        * dds/DCPS/transport/framework/DataLink.cpp:
+        * dds/DCPS/transport/framework/DataLinkSet.h:
+        * dds/DCPS/transport/framework/DataLinkSet.cpp:
+        * dds/DCPS/transport/framework/TransportClient.cpp:
+
+          Replaced DataLinkSetMap with the std::map that it used to
+          contain.
+
+        * dds/DCPS/transport/multicast/BestEffortSession.h:
+        * dds/DCPS/transport/multicast/BestEffortSession.cpp:
+
+          Removed unused check_header(const DataSampleHeader&).
+
+        * dds/DCPS/transport/framework/DataLinkSetMap.h:
+        * dds/DCPS/transport/framework/DataLinkSetMap.cpp:
+
+          Removed these files.
+
+Thu Apr  5 15:25:59 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * tools/scripts/lcov.pl:
+
+          Fixed variable name.
+
+Thu Apr  5 13:54:18 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * tests/DCPS/UnitTests/UnitTests.mpc:
+
+          Added needed dependencies for InfoRepoDiscovery.
+
+Thu Apr  5 09:33:18 UTC 2012  Johnny Willemsen  <jwillemsen@remedy.nl>
+
+        * dds/DCPS/RTPS/RtpsInfo.cpp:
+          Fixed argument not used warnings
+
+Wed Apr  4 21:45:43 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/Discovery.h:
+        * dds/DCPS/Discovery.cpp:
+        * dds/DCPS/Service_Participant.h:
+        * dds/DCPS/Service_Participant.cpp:
+        * dds/DCPS/StaticIncludes.h:
+
+          Allow dynamic loading of InfoRepoDiscovery in its own library.
+
+        * dds/DCPS/InfoRepoDiscovery:
+        * dds/DCPS/InfoRepoDiscovery/InfoRepoDiscovery.cpp:
+
+          New library for InfoRepoDiscovery.
+
+        * MPC/config/dcpsexe.mpb:
+
+          Link the InfoRepoDiscovery library as well.  Needed for static builds.
+
+        * dds/DCPS/RTPS/RtpsDiscovery.h:
+        * dds/DCPS/RTPS/RtpsDiscovery.cpp:
+        * dds/DCPS/RTPS/rtps.mpc:
+
+          Use a more general mechanism for loading new discovery libraries.
+
+        * dds/DCPS/transport/framework/TransportRegistry.cpp:
+
+          Re-use the code for dynamic transport library loading for
+          discovery libraries as well.
+
+        * dds/InfoRepo/DCPSInfoRepo.cpp:
+        * dds/InfoRepo/DCPSInfoRepoServ.cpp:
+
+          Use the new InfoRepoDiscovery library.
+
+        * dds/DdsDcps.mpc:
+        * dds/dcps_bits.mpb:
+        * dds/monitor/monitor.mpc:
+        * MPC/config/dcps.mpb:
+        * MPC/config/dcps_inforepodiscovery.mpb:
+        * MPC/config/dcps_lem_stub.mpb:
+        * MPC/config/dcps_monitor.mpb:
+        * MPC/config/dcps_rtps.mpb:
+
+          Use a consistent project naming convention for all core libraries.
+
+        * DevGuideExamples/DCPS/*/Publisher.cpp:
+        * DevGuideExamples/DCPS/*/Subscriber.cpp:
+        * examples/DCPS/Messenger_Imr/publisher.cpp:
+        * examples/DCPS/Messenger_Imr/subscriber.cpp:
+        * examples/DCPS/ishapes/main.cpp:
+        * performance-tests/Bench/src/testprocess.cpp:
+        * performance-tests/DCPS/*/publisher.cpp:
+        * performance-tests/DCPS/*/subscriber.cpp:
+        * tests/DCPS/*:
+
+          Replaced the #include of Tcp.h that was conditional on
+          ACE_AS_STATIC_LIBS with an #include of a new header, StaticIncludes.h,
+          where we can centrally manage what needs to get #included for a static
+          build.
+
+        * dds/DCPS/FailoverListener.h:
+        * dds/DCPS/FailoverListener.cpp:
+        * dds/DCPS/InfoRepoDiscovery.h:
+        * dds/DCPS/InfoRepoDiscovery.cpp:
+
+          Removed these files.  They have been moved to InfoRepoDiscovery.
+
+Wed Apr  4 18:27:14 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/multicast/MulticastSendStrategy.h:
+        * dds/DCPS/transport/multicast/MulticastSendStrategy.cpp:
+
+          For the new async_send option, only create one ACE_Asynch_Write_Dgram
+          object and make it a member of the MulticastSendStrategy class so
+          it can attempt to cancel I/O during transport shutdown.
+
+Wed Apr  4 15:42:57 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * tools/scripts/lcov.pl:
+
+          Cleanup of script.
+
+Wed Apr  4 15:28:48 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * tools/scripts/lcov.pl:
+
+          Changes for running lcov with no .shobj directories.
+
+Wed Apr  4 13:37:30 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * dds/DCPS/RTPS/RtpsInfo.cpp:
+        * dds/DCPS/RTPS/Sedp.h:
+        * dds/DCPS/RTPS/Sedp.cpp:
+        * dds/DCPS/RTPS/Spdp.h:
+        * dds/DCPS/RTPS/Spdp.cpp:
+
+          Moved forwarding of dissassociate_* functions to Sedp where
+          they were a no-op, to just be a no-op in RtpsInfo where
+          the DiscoveryInfo interface requires it.
+
+Mon Apr  2 18:00:18 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/framework/ReceiveListenerSet.inl:
+
+          The method for re-setting rd_ptr() when there are multiple
+          listeners needs to account for the fact that continuation
+          blocks also have their rd_ptr()s modified during demarshaling.
+
+Mon Apr  2 14:51:40 UTC 2012  Brian Johnson  <johnsonb@ociweb.com>
+
+        * dds/DCPS/RTPS/Sedp.cpp:
+        * dds/DCPS/RTPS/Sedp.h:
+
+          Storing associated_participants_ prior to writing the
+          publication/subscription data. Changed add publication/
+          subscription to have an invalid sequence number, so new
+          sequence number can be used in set_header_fields.
+
+Fri Mar 30 22:14:30 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/framework/TransportReassembly.cpp:
+
+          Manage the ACE_Message_Block inside the ReceivedDataSample
+          consistently for all cases of reassembling fragments.
+
+        * dds/DCPS/transport/multicast/BestEffortSession.cpp:
+
+          Don't call data_unavailable() with an invalid range.
+
+        * tests/DCPS/UnitTests/Fragmentation.cpp:
+
+          Update test for TransportReassembly change above.
+
+Thu Mar 29 20:42:00 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/multicast/MulticastDataLink.cpp:
+
+          Improved debug logging for joining the multicast group.
+
+        * dds/DCPS/transport/multicast/MulticastTransport.cpp:
+        * dds/DCPS/transport/udp/UdpTransport.cpp:
+
+          Fixed a bug in reference counting the TransportReactorTask.
+
+Wed Mar 28 18:52:34 UTC 2012  Adam Mitz  <mitza@ociweb.com>
+
+        * ChangeLog:
+        * docs/history/ChangeLog-3.1:
+
+          Moved version 3.1 ChangeLog entries to a separate file.
+
+Local Variables:
+mode: change-log
+add-log-time-format: (lambda () (progn (setq tz (getenv "TZ")) (set-time-zone-rule "UTC") (setq time (format-time-string "%a %b %e %H:%M:%S %Z %Y" (current-time))) (set-time-zone-rule tz) time))
+indent-tabs-mode: nil
+End:
