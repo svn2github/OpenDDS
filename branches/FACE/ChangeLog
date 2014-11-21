@@ -1,0 +1,951 @@
+Thu Nov 20 20:09:46 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/RTPS/Sedp.cpp:
+
+          Made debug logging conditional on DCPS_debug_level.
+
+Thu Nov 20 19:37:43 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/framework/TransportImpl.cpp:
+
+          Fix C++ STL usage to be compatible with the old version on SunCC.
+
+Thu Nov 20 18:44:09 UTC 2014  Peter Oschwald  <oschwaldp@ociweb.com>
+
+        * dds/DCPS/WriteDataContainer.cpp:
+        * docs/design/TRANSPORT_RECONNECT:
+        * tests/DCPS/BuiltInTopic/main.cpp:
+
+          Fixed some spelling.
+
+        * tests/DCPS/Messenger/run_ns_test.pl:
+
+          Changed test to use $PerlACE::wait_interval_for_process_creation
+          when waiting for ns.ior file to be created.
+
+Thu Nov 20 18:20:01 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * dds/DCPS/transport/tcp/TcpConnection.cpp:
+
+          Add some debug messages to handle_close() and the various
+          reconnect paths.
+
+Thu Nov 20 17:54:16 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/framework/TransportImpl.h:
+
+          Promote nested structs from protected to public, vc71 won't compile
+          the TransportClient header when they are protected even though the
+          friend declaration is present.
+
+Thu Nov 20 17:11:19 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/transport/framework/TransportClient.cpp:
+        * dds/DCPS/transport/framework/TransportConfig.h:
+        * dds/DCPS/transport/framework/TransportConfig.cpp:
+
+          If the passive_connect_duration_ is set to 0, treat it as the
+          default value of 60 seconds.  With the async_assoc changes,
+          0 will cause the timer to expire immediately and fail the association.
+
+Wed Nov 19 19:16:30 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * Merged the branch async_assoc which lets the association process,
+          which sets up communication channels from matched writers to readers,
+          proceed without blocking the thread that initiated it (discovery).
+          This helps scalability, especially with RTPS's peer-to-peer discovery
+          where each participant is processing associations on its own.
+          For details see the branch-specific change log at
+          docs/history/ChangeLog-async_assoc.
+
+Fri Nov 14 21:07:29 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * DDS_TAOv2.mwc:
+        * DDS_TAOv2_all.mwc:
+
+          Add some more missing libs to DDS_TAOv2.mwc.  Order and
+          clean up both of these files.
+
+Fri Nov 14 17:10:13 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * DDS_TAOv2.mwc:
+
+          Add TAO CSD libraries to this workspace file.
+
+Thu Nov 13 17:59:51 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * dds/DCPS/DomainParticipantImpl.cpp:
+
+          Fix an infinite loop when the InfoRepo throws an exception
+          from remove_topic().
+
+Thu Nov 13 16:03:35 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * tests/DCPS/LargeSample/Writer.h:
+        * tests/DCPS/LargeSample/Writer.cpp:
+
+          Fixed a warning and corrected ACE_DEBUG varargs error.
+
+Tue Nov 11 19:03:42 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/Footprint:
+
+          set svn:ignore
+
+        * tests/DCPS/LargeSample/DataReaderListener.cpp:
+        * tests/DCPS/LargeSample/Writer.h:
+        * tests/DCPS/LargeSample/Writer.cpp:
+
+          Write growing sample sizes during test.
+
+Mon Nov 10 23:15:57 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+
+        * dds/DCPS/transport/tcp/TcpConnection.h:
+        * dds/DCPS/transport/tcp/TcpConnection.cpp:
+
+          Make a couple of changes that prevent the Reconnect test
+          from "leaking" threads on the subscriber side.  The main
+          change is to explicitly tear down the link after the
+          timer goes off indicating the reconnect delay is over.
+          In addition, some doubly linked lists between the old
+          and new connections were removed.
+
+        * dds/DCPS/transport/framework/TransportQueueElement.cpp:
+        * tests/transport/simple/pub_main.cpp:
+        * tests/transport/simple/sub_main.cpp:
+
+          Cleanup some of the DBG_ macro usage.
+
+Thu Nov  6 16:30:10 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.cpp:
+        * dds/DCPS/DataWriterImpl.h:
+        * dds/DCPS/DataWriterImpl.cpp:
+
+          Send the relevant reader RepoId as the message payload
+          of the END_HISTORIC_SAMPLES control message.
+
+        * dds/DCPS/transport/framework/DataLinkSet.h:
+        * dds/DCPS/transport/framework/DataLinkSet.inl:
+        * dds/DCPS/transport/framework/TransportClient.h:
+        * dds/DCPS/transport/framework/TransportClient.cpp:
+
+          Support sending a DCPS control message to a specific
+          DataLink instead of the entire DataLinkSet.
+
+Thu Oct 30 17:25:46 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/ManualAssertLiveliness/DataReaderListener.cpp:
+        * tests/DCPS/ManualAssertLiveliness/Writer.h:
+        * tests/DCPS/ManualAssertLiveliness/Writer.cpp:
+        * tests/DCPS/ManualAssertLiveliness/publisher.cpp:
+        * tests/DCPS/ManualAssertLiveliness/subscriber.cpp:
+
+          Use a second participant for MBP Writer 2, in case order
+          of liveliness change calls are reversed.
+          Sleep in subscriber before deleting entities, so that
+          final liveliness messages can be received and handled.
+
+Wed Oct 29 17:55:02 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataWriterImpl.cpp:
+
+          Log when liveliness is skipped due to timing.
+
+        * tests/DCPS/ManualAssertLiveliness/run_test.pl:
+
+          Run at higher debug log level.
+
+Wed Oct 29 14:56:50 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.cpp:
+
+          Disable use of END_HISTORIC_SAMPLES control messages
+          with multicast DataLinks.
+
+        * dds/DCPS/transport/multicast/MulticastDataLink.h:
+        * dds/DCPS/transport/multicast/MulticastDataLink.cpp:
+        * dds/DCPS/transport/multicast/ReliableSession.cpp:
+
+          Discard duplicate messages as defined by the DataSampleHeader
+          GUID and sequence number.  These can occur with durability resending
+          a data sample at the same time a nak-based resend occurs.
+          Removing duplicates here is sufficient to provide the functionality
+          that END_HISTORIC_SAMPLES at the DataReaderImpl level used to do.
+
+        * tests/DCPS/LargeSample/multicast.ini:
+
+          Improve multicast nak tuning for this test.
+
+        * DDS_TAO_all.mwc:
+        * DDS_TAOv2_all.mwc:
+
+          Added TAO CSD Threadpool which was added as a runtime dependency
+          for tests back on Fri Jul 11 20:43:52 UTC 2014 (before version 3.5.1).
+
+Tue Oct 28 21:56:09 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.cpp:
+
+          Added a log message to diagnose liveliness lost
+
+Tue Oct 28 14:44:41 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * tests/DCPS/LargeSample/subscriber.cpp:
+
+          Removed some checking when an unreliable transport is used.
+
+Mon Oct 27 22:02:48 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * tests/DCPS/LargeSample/multicast.ini:
+        * tests/DCPS/LargeSample/publisher.cpp:
+        * tests/DCPS/LargeSample/subscriber.cpp:
+
+          Test requires durability QoS to ensure delivery of all samples
+          with rtps_udp transport.  Can't just depend on association_complete
+          because the transport will not request resends for lost data with
+          sequence numbers less than the first received without durability.
+
+Mon Oct 20 21:58:03 UTC 2014  Adam Mitz  <mitza@ociweb.com>
+
+        * tests/DCPS/LargeSample/publisher.cpp:
+
+          Restored a #include that was removed in r6563.
+
+Mon Oct 20 19:02:17 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/publisher.cpp:
+
+          Sleep before exiting to allow naks to be received.
+
+Mon Oct 20 18:05:18 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/ManualAssertLiveliness/publisher.cpp:
+
+          Sleep one second before deleting entities.
+
+Fri Oct 17 21:22:55 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * dds/DCPS/transport/tcp/TcpTransport.cpp:
+
+          Fix some bugs with IPv6 addresses.
+
+        * tests/DCPS/BidirMessenger/pubsub_ipv6.ini:
+        * tests/DCPS/Messenger/pub_ipv6.ini:
+        * tests/DCPS/Messenger/sub_ipv6.ini:
+        * tests/DCPS/RecorderReplayer/pub_ipv6.ini:
+        * tests/DCPS/RecorderReplayer/relay_ipv6.ini:
+        * tests/DCPS/ZeroCopyDataReaderListener/pub_ipv6.ini:
+
+          Fix some problems with IPv6 addresses used in these tests.
+
+
+Thu Oct 16 21:19:37 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/run_test.pl:
+        * tests/DCPS/ManualAssertLiveliness/run_test.pl:
+
+          Log level changes
+
+Thu Oct 16 19:18:34 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * dds/InfoRepo/DCPS_IR_Publication.cpp:
+        * dds/InfoRepo/DCPS_IR_Subscription.cpp:
+        * dds/InfoRepo/InfoRepoMulticastResponder.cpp:
+
+          Change a number of debug statements from using TAO_debug_level
+          to OpenDDS::DCPS::DCPS_debug_level.
+
+Mon Oct 13 16:30:43 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * bin/dcps_tests.lst:
+
+          Don't run RTPS tests on mosquito with no BITs
+
+        * tests/DCPS/Compiler/idl_test1_main/main.cpp:
+        * tests/DCPS/Compiler/idl_test3_main/main.cpp:
+        * tests/DCPS/ConfigTransports/publisher.cpp:
+        * tests/DCPS/ConfigTransports/subscriber.cpp:
+
+          Catch exceptions pointed out by Coverity
+
+        * tools/modeling/codegen/model/Entities.cpp:
+
+          Check return code pointed out by Coverity
+
+Thu Oct  9 18:00:05 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * MPC/config/dcps.mpb:
+        * dds/DCPS/InfoRepoDiscovery/InfoRepoDiscovery.mpc:
+        * dds/monitor/monitor.mpc:
+
+          Revert the previous two changes.  Changing the dependency on
+          the TAO portable server library needs to be rethought.
+
+Thu Oct  9 14:48:51 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/transport/multicast/ReliableSession.cpp:
+
+          Consistent and clearer logging regarding resends and naks.
+
+Thu Oct  9 11:43:16 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * MPC/config/dcps_inforepodiscovery.mpb:
+        * dds/DCPS/InfoRepoDiscovery/InfoRepoDiscovery.mpc:
+        * dds/monitor/monitor.mpc:
+
+          Move the TAO Portable Server library dependency to the Info Repo
+          and other libraries as this is the way some VC++ builds need it.
+
+Wed Oct  8 15:41:58 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * MPC/config/dcps.mpb:
+        * MPC/config/dcps_inforepodiscovery.mpb:
+
+          Move dependency on the TAO Portable Server library from the dcps
+          project to the dcps_inforepodiscovery project.  OpenDDS applications
+          not using InfoRepo discovery are not CORBA servers and do not
+          require the TAO Portable Server library.
+
+Tue Oct  7 20:56:13 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * tests/DCPS/Footprint:
+        * tests/DCPS/Footprint/Args.h:
+        * tests/DCPS/Footprint/DataReaderListener.h:
+        * tests/DCPS/Footprint/DataReaderListener.cpp:
+        * tests/DCPS/Footprint/Footprint.mpc:
+        * tests/DCPS/Footprint/Messenger.idl:
+        * tests/DCPS/Footprint/Messenger_export.h:
+        * tests/DCPS/Footprint/Writer.h:
+        * tests/DCPS/Footprint/Writer.cpp:
+        * tests/DCPS/Footprint/pub.ini:
+        * tests/DCPS/Footprint/rtps.ini:
+        * tests/DCPS/Footprint/rtpspublisher.cpp:
+        * tests/DCPS/Footprint/rtpssubscriber.cpp:
+        * tests/DCPS/Footprint/run_test.pl:
+        * tests/DCPS/Footprint/sub.ini:
+        * tests/DCPS/Footprint/tcppublisher.cpp:
+        * tests/DCPS/Footprint/tcpsubscriber.cpp:
+
+          Add footprint publishers and subscribers for both RTPS and
+          InfoRepo/tcp.
+
+Tue Oct  7 17:49:08 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * performance-tests/DCPS/SimpleLatency/sample_pub.cpp:
+        * performance-tests/DCPS/SimpleLatency/sample_sub.cpp:
+        * tests/DCPS/Compiler/idl_test1_main/main.cpp:
+        * tests/DCPS/Compiler/idl_test3_main/main.cpp:
+        * tests/DCPS/ConfigTransports/publisher.cpp:
+        * tests/DCPS/FooTest5/publisher.cpp:
+        * tests/DCPS/FooTest5/subscriber.cpp:
+        * tests/transport/rtps/subscriber.cpp:
+
+          Catch exceptions reported by Coverity.
+
+Mon Oct  6 23:06:11 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * dds/DCPS/ReplayerImpl.cpp:
+        * dds/DCPS/WriterInfo.h:
+
+          Fix some problems that manifest when various profiles are
+          disabled in a footprint build.
+
+Thu Oct  2 17:57:36 UTC 2014  Phillip LaBanca  <labancap@ociweb.com>
+
+        * tests/DCPS/Inconsistent_Qos/inconsistent_qos.cpp:
+        * tests/transport/error_handling/SimpleTransportClient.h:
+
+         Catch exceptions.
+
+Tue Sep 30 22:55:34 UTC 2014  Phillip LaBanca  <labancap@ociweb.com>
+
+        * tests/transport/rtps/subscriber.cpp:
+
+        Catch exceptions.
+
+Tue Sep 30 22:27:26 UTC 2014  Phillip LaBanca  <labancap@ociweb.com>
+
+        * tests/transport/rtps/publisher.cpp:
+
+        Catch exceptions.
+
+Tue Sep 30 21:38:37 UTC 2014  Phillip LaBanca  <labancap@ociweb.com>
+
+        * tests/DCPS/FilterExpression/FilterExpression.cpp:
+
+        Catch exceptions.
+
+Tue Sep 30 20:56:17 UTC 2014  Phillip LaBanca  <labancap@ociweb.com>
+
+        * performance-tests/DCPS/Priority/publisher_main.cpp:
+        * performance-tests/DCPS/Priority/subscriber_main.cpp:
+        * performance-tests/DCPS/SimpleLatency/sample_pub.cpp:
+        * performance-tests/DCPS/SimpleLatency/sample_sub.cpp:
+
+        Catch exceptions.
+
+Tue Sep 30 14:57:27 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/pub_multicast_async.ini:
+        * tests/DCPS/ManyToMany/pub_multicast_async.ini:
+        * tests/DCPS/ManyToMany/udp.ini:
+        * tests/DCPS/PersistentInfoRepo/pub_multicast_async.ini:
+
+          Adjust buffer sizes, nak depths.
+
+Mon Sep 29 18:21:52 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/Compiler/idl_test1_main/main.cpp:
+        * tests/DCPS/ManyToMany/publisher.cpp:
+        * tests/DCPS/ManyToMany/subscriber.cpp:
+        * tests/DCPS/PersistentDurability/publisher.cpp:
+
+          Catch exceptions.
+
+Mon Sep 29 17:32:34 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/Reconnect/run_test.pl:
+
+          Increased Debug level for function coverage.
+
+Mon Sep 29 17:26:30 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/BuiltInTopicTest/run_test.pl:
+
+          Increased Debug level for function coverage.
+
+Thu Sep 25 15:22:23 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/Writer.h:
+        * tests/DCPS/LargeSample/Writer.cpp:
+        * tests/DCPS/LargeSample/publisher.cpp:
+
+          Send num messages based on command line param.
+          For unreliable, reduce sleep to 100ms between sends.
+
+        * tests/DCPS/LargeSample/subscriber.cpp:
+
+          Expect  num messages based on command line param.
+
+        * tests/DCPS/LargeSample/run_test.pl:
+
+          Set -n commane line params for publisher and subscriber.
+
+        * tests/DCPS/LargeSample/udp.ini:
+
+          Increse buffer size. Default is only large enough to hold one message.
+
+Mon Sep 22 19:59:33 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/UnitTests/ut_Reassembly.cpp:
+
+          Comment out for now...
+
+Mon Sep 22 14:43:48 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/UnitTests:
+        * tests/DCPS/UnitTests/UnitTests.mpc:
+        * tests/DCPS/UnitTests/ut_Reassembly.cpp:
+
+          Test of reassembly of fragments.
+
+Thu Sep 18 22:00:16 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/ManualAssertLiveliness/DataWriterListenerImpl.cpp:
+        * tests/DCPS/ManualAssertLiveliness/publisher.cpp:
+
+          Fix copy and paste errors in nil checks and logging.
+
+        * tests/DCPS/ManualAssertLiveliness/pub.ini:
+        * tests/DCPS/ManualAssertLiveliness/sub.ini:
+
+          Make ini file more standard - add TCP transport, set
+          DCPSGlobalTransportConfig.
+
+Thu Sep 18 21:47:51 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/Ownership/publisher.cpp:
+
+          Restore call to wait_ack().
+
+        * tests/DCPS/Ownership/sub.ini:
+        * tests/DCPS/Ownership/pub.ini:
+
+          Make ini file more standard - add TCP transport, set
+          DCPSGlobalTransportConfig.  Was loading UDP in static
+          builds.
+
+Thu Sep 18 18:49:53 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/Ownership/DataReaderListener.cpp:
+
+          take_next_sample() in a loop.
+
+        * tests/DCPS/Ownership/publisher.cpp:
+
+          Don't call wait_ack(), causing timeout in static builds.
+
+Thu Sep 18 04:50:38 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/Ownership/DataReaderListener.cpp:
+
+          Fix fuzz.
+
+Wed Sep 17 21:44:28 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/InfoRepo/DCPS_IR_Publication.cpp:
+        * dds/InfoRepo/DCPS_IR_Subscription.cpp:
+
+          Redmine issue 1461 Logging incorrect after failed add_association() call.
+
+Wed Sep 17 19:06:39 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/BitPubListenerImpl.cpp:
+
+          In on_data_available(), call take_next_sample() in a loop,
+          to get all samples in a timely manor.
+
+        * dds/DCPS/DomainParticipantImpl.cpp:
+
+          Call on_data_available() when attaching listener.
+
+        * dds/DCPS/WriterInfo.h:
+        * dds/DCPS/WriterInfo.cpp:
+
+          Rename OwnerEvaluateFlag to OwnerEvaluateFlags.
+
+        * dds/InfoRepo/DCPS_IR_Domain.cpp:
+
+          Check status of write() call.
+
+        * tests/DCPS/Ownership/Ownership.mpc:
+        * tests/DCPS/Ownership/Writer.h:
+        * tests/DCPS/Ownership/Writer.cpp:
+        * tests/DCPS/Ownership/publisher.cpp:
+
+          Wait for acknowledgements before exiting.
+
+        * tests/DCPS/Ownership/DataReaderListener.cpp:
+
+          Additional logging of failure reasons.
+
+        * tests/DCPS/Ownership/subscriber.cpp:
+
+          Make all entties go out of scope before calling delete_contained_entities().
+
+Tue Sep 16 14:16:34 UTC 2014  Paul Calabrese  <calabrese_p@ociweb.com>
+
+        * tools/modeling/README.dev:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.datalib/META-INF/MANIFEST.MF:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.datalib/plugin.xml:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.datalib/src/org/opendds/modeling/diagram/datalib/edit/parts/StructFieldsEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.datalib/src/org/opendds/modeling/diagram/datalib/edit/parts/StructKeysEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.datalib/src/org/opendds/modeling/diagram/datalib/part/OpenDDSDataLibDiagramEditor.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.datalib/src/org/opendds/modeling/diagram/datalib/preferences/DiagramPreferenceInitializer.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/META-INF/MANIFEST.MF:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/plugin.xml:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/DeadlineQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/DsQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/LbQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/LifespanQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/LivelinessQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/RdlQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/ReliabilityQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/commands/TbfQosPolicyCreateCommand.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DataReaderQoSPoliciesCustomEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DataReaderQoSPoliciesSharedEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DataWriterQoSPoliciesCustomEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DataWriterQoSPoliciesSharedEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DomainParticipantEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DomainParticipantQoSPoliciesCustomEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/DomainParticipantQoSPoliciesSharedEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/MultiTopicDataTypeEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/PublisherQoSPoliciesCustomEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/PublisherQoSPoliciesSharedEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/SubscriberQoSPoliciesCustomEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/SubscriberQoSPoliciesSharedEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/TopicDataTypeEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/TopicQoSPoliciesCustomEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/parts/TopicQoSPoliciesSharedEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/DeadlineQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/DsQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/LbQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/LifespanQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/LivelinessQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/RdlQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/ReliabilityQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/edit/policies/TbfQosPolicy2ItemSemanticEditPolicy.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/part/OpenDDSDcpsLibDiagramEditor.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.dcpslib/src/org/opendds/modeling/diagram/dcpslib/preferences/DiagramPreferenceInitializer.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/META-INF/MANIFEST.MF:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/plugin.xml:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/src/org/opendds/modeling/diagram/main/edit/parts/LibPackage2EditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/src/org/opendds/modeling/diagram/main/edit/parts/LibPackageEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/src/org/opendds/modeling/diagram/main/edit/parts/OpenDDSModelEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/src/org/opendds/modeling/diagram/main/part/OpenDDSCreationWizard.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/src/org/opendds/modeling/diagram/main/part/OpenDDSDiagramEditor.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.main/src/org/opendds/modeling/diagram/main/preferences/DiagramPreferenceInitializer.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/META-INF/MANIFEST.MF:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/plugin.xml:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/DestinationOrderQosPolicyKindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/DsQosPolicyHistory_kindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/DurabilityQosPolicyKindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/HistoryQosPolicyKindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/LivelinessQosPolicyKindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/OwnershipQosPolicyKindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/PresentationQosPolicyAccess_scopeEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/edit/parts/ReliabilityQosPolicyKindEditPart.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/part/OpenDDSPolicyLibDiagramEditor.java:
+        * tools/modeling/plugins/org.opendds.modeling.diagram.policylib/src/org/opendds/modeling/diagram/policylib/preferences/DiagramPreferenceInitializer.java:
+        * tools/modeling/plugins/org.opendds.modeling.gmf/templates/aspects/parsers/PredefinedParser.xpt:
+        * tools/modeling/plugins/org.opendds.modeling.model.edit/build.properties:
+        * tools/modeling/plugins/org.opendds.modeling.model.editor/plugin.xml:
+        * tools/modeling/plugins/org.opendds.modeling.model.editor/src/org/opendds/modeling/model/opendds/presentation/OpenDDSEditor.java:
+        * tools/modeling/plugins/org.opendds.modeling.model.editor/src/org/opendds/modeling/model/opendds/presentation/OpenDDSModelWizard.java:
+        * tools/modeling/plugins/org.opendds.modeling.model/model/OpenDDS.genmodel:
+        * tools/modeling/plugins/org.opendds.modeling.model/plugin.xml:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.edit/build.properties:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.edit/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Provider/LocationPathItemProvider.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.edit/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Provider/LocationVariableItemProvider.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.edit/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Provider/SearchLocationItemProvider.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.edit/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Provider/TransportInstItemProvider.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.edit/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Provider/TransportRefItemProvider.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.editor/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Presentation/GeneratorActionBarContributor.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.editor/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Presentation/GeneratorEditor.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model.editor/src/org/opendds/modeling/sdk/model/GeneratorSpecification/Presentation/GeneratorEditorPlugin.java:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model/META-INF/MANIFEST.MF:
+        * tools/modeling/plugins/org.opendds.modeling.sdk.model/plugin.xml:
+
+           Modeling changes to support GMF 3.1.X
+           Merged from branch modeling_using_gmf_3.1
+
+Fri Sep 12 21:23:28 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tools/modeling/codegen/model/Delegate.cpp:
+        * tools/modeling/codegen/model/Entities.h:
+        * tools/modeling/codegen/model/Service_T.h:
+        * tools/modeling/codegen/model/Service_T.cpp:
+
+          Fix memory leak of domain participant and topic description
+          in modeling library.
+
+Fri Sep 12 17:52:19 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.cpp:
+        * dds/DCPS/WriterInfo.h:
+        * dds/DCPS/WriterInfo.cpp:
+
+          0 is a legitimate timer value.  Use -1 to indicate not
+          waiting for historic samples.
+
+Thu Sep 11 19:00:07 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/publisher.cpp:
+
+          Fix fuzz
+
+Thu Sep 11 16:22:40 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/pub_multicast_async.ini:
+
+          Make multicast_async have sufficient nak depth for resends.
+
+Thu Sep 11 15:58:21 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.cpp:
+
+          Only log when debug level is set.
+
+        * tests/DCPS/Thrasher/ParticipantTask.cpp:
+        * tests/DCPS/Thrasher/Subscriber.cpp:
+
+          Make entities go out of scope prior to calling
+          partiipant->delete_containe_entities().
+
+Tue Sep  9 21:11:22 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/publisher.cpp:
+
+          Fix parsing of -r to be non-destructive.
+
+Tue Sep  9 20:58:14 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/Writer.h:
+        * tests/DCPS/LargeSample/Writer.cpp:
+        * tests/DCPS/LargeSample/publisher.cpp:
+        * tests/DCPS/LargeSample/run_test.pl:
+
+          Restore sleep of 1 second when non-reliable (udp).
+
+Tue Sep  9 18:38:46 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.h:
+        * dds/DCPS/DataReaderImpl.cpp:
+        * dds/DCPS/WriterInfo.h:
+        * dds/DCPS/WriterInfo.cpp:
+
+          TransientLocalTest fix - wait for up to 10 seconds for
+          EndHistoricSamples message, and block non-durable messages until
+          then.  Cancel timer when cleaning up.
+
+Fri Sep  5 21:20:27 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.cpp:
+        * dds/DCPS/DataWriterImpl.cpp:
+
+          Check lengths of readers and writers before accessing in
+          remove_associations().
+
+Fri Sep  5 16:25:41 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/transport/framework/DataLink.cpp:
+
+          Check for nil result from pub_map_.find() in
+          DataLink::target_intersection().
+
+Sun Aug 31 17:54:04 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataCollector_T.cpp:
+
+          Fix build error.
+
+        * dds/DCPS/DataReaderImpl.cpp:
+
+          Increase log level for common messages
+
+Thu Aug 28 20:02:32 UTC 2014  Peter Oschwald  <oschwaldp@ociweb.com>
+
+        * tests/DCPS/FooTest5/subscriber.cpp:
+
+          Fixed check of return value to fscanf
+
+Thu Aug 28 16:33:47 UTC 2014  Peter Oschwald  <oschwaldp@ociweb.com>
+
+        * tools/excelRTD/RTDMonitor.cpp:
+
+          Replaced pointer comparison to NULL with !pointer syntax
+          to removed compile warnings
+
+        * tools/monitor/Viewer.cpp:
+
+          Replaced pointer comparison to 0 with !pointer syntax
+          to removed compile warnings
+
+Thu Aug 28 15:54:55 UTC 2014  Peter Oschwald  <oschwaldp@ociweb.com>
+
+        * tests/DCPS/DpShutdown/dpshutdown.cpp:
+
+          Removed unused exception references
+
+Thu Aug 28 14:24:48 UTC 2014  Peter Oschwald  <oschwaldp@ociweb.com>
+
+        * dds/DCPS/DataCollector_T.cpp:
+
+          include ios to try to mitigate sunos not finding std::ios
+
+Thu Aug 28 07:04:19 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/BitPubListenerImpl.cpp:
+
+          Move log message to higher level
+
+Wed Aug 27 19:39:07 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * tests/DCPS/CompatibilityTest/subscriber.cpp:
+        * tests/DCPS/DCPSInfoRepo/pubsub.cpp:
+        * tests/DCPS/DpShutdown/dpshutdown.cpp:
+
+          Catch exceptions being missed as reported by
+          Coverity.
+
+Wed Aug 27 17:30:41 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * tests/DCPS/MultiRepoTest/TestConfig.h:
+        * tests/DCPS/MultiRepoTest/TestConfig.cpp:
+
+          Undo changes from commit "Wed Aug 27 14:18:17 UTC 2014"
+          as this resulted in checking if an unsigned value is less
+          than 0, which is always false.
+
+Wed Aug 27 16:57:49 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * performance-tests/DCPS/SimpleLatency/sample_pub.cpp:
+        * tests/DCPS/FooTest5/subscriber.cpp:
+        * tests/DCPS/Ownership/subscriber.cpp:
+        * tests/transport/rtps_reliability/rtps_reliability.cpp:
+
+          Address not checking function return status as reported
+          by Coverity.
+
+Wed Aug 27 14:18:17 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * tests/DCPS/MultiRepoTest/TestConfig.h:
+        * tests/DCPS/MultiRepoTest/TestConfig.cpp:
+
+          Make member function input argument types consistent
+          internal types.
+
+        * tests/DCPS/MultiRepoTest/TestSystem.cpp:
+        * tests/DCPS/WaitForAck/Publisher.cpp:
+        * tests/DCPS/WaitForAck/Subscriber.cpp:
+
+          Intialize all members in contructor initializers.
+
+Tue Aug 26 21:46:09 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/DCPS/transport/tcp/TcpDataLink.cpp:
+
+          Convert dynamic_casts to static_casts for performance
+          gain as suggested by Coverity.
+
+        * performance-tests/DCPS/Sync/SyncServer_i.cpp:
+
+          Added exception to throw list that Coverity reported was
+          missing.
+
+        * tests/DCPS/DPFactoryQos/Writer.cpp:
+
+          Added null pointer check that Coverity reported was missing.
+
+        * tests/DCPS/FooTest5/publisher.cpp:
+
+          Avoid null dereference check after Coverity reported such a
+          dereference was possible.
+
+Tue Aug 26 18:04:38 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/DCPS/DataCollector_T.cpp:
+
+          In DataCollector::insert(std::ostream& str) restore
+          stream formatting state to what it was upon entry as Coverity
+          reported the stream formating state changed upon exit.
+
+        * tests/DCPS/LivelinessTest/Writer.cpp:
+        * tests/DCPS/StringKey/DataReaderListener.cpp:
+
+          Initialize class members based on Coverity reporting them
+          not being set.
+
+        * tests/DCPS/unit/Main.cpp:
+        * tests/transport/rtps_reliability/rtps_reliability.cpp:
+
+          Initialize GUID structs based on Coverity reporting them
+          being used uninitialized.
+
+
+Tue Aug 26 07:34:13 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/transport/rtps_reliability/rtps_reliability.cpp:
+
+          Fix build error.
+
+Mon Aug 25 20:50:55 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/InfoRepo/FederatorManagerImpl_updates.cpp:
+        * performance-tests/Bench/src/Publication.cpp:
+        * performance-tests/Bench/src/Subscription.cpp:
+
+          Fuzz fixing.
+
+Mon Aug 25 20:24:17 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/DCPS/transport/framework/TransportReassembly.cpp:
+        * tests/DCPS/ConfigTransports/Options.cpp:
+        * tests/DCPS/DCPSInfoRepo/pubsub.cpp:
+        * tests/transport/rtps/publisher.cpp:
+        * tests/transport/rtps_reliability/rtps_reliability.cpp:
+
+          Address null pointer dereferencing issues reported by
+          Coverity.
+
+Mon Aug 25 14:49:26 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/DCPS/DataReaderImpl.h:
+        * dds/idl/CPPTemplate.txt:
+        * dds/idl/HTemplate.txt:
+        * tests/DCPS/unit/MyTypeSupportImpl.h:
+
+          Remove pure virtual function DataReaderImpl::take_generic()
+          which wasn't being used anywhere.
+
+        * dds/DCPS/ZeroCopySeq_T.h:
+        * dds/DCPS/ZeroCopySeq_T.cpp:
+
+          Remove ZeroCopySeq::decrement_reference() which was only
+          being called by code that implemented DataReaderImpl::take_generic().
+          This function had questionable semantics anyway since it
+          wasn't clear what the expected behavior was if the reference
+          count went to zero.
+
+Mon Aug 25 12:38:56 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/InfoRepo/FederatorManagerImpl_updates.cpp:
+        * performance-tests/Bench/src/Publication.cpp:
+        * performance-tests/Bench/src/Subscription.cpp:
+
+          Address failure to check return status codes as reported
+          by Coverity.
+
+Fri Aug 22 20:08:21 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/LargeSample/Writer.cpp:
+
+          Don't sleep between sends.
+
+        * tests/DCPS/LargeSample/multicast.ini:
+
+          Double nak_depth.
+
+        * tests/DCPS/LargeSample/subscriber.cpp:
+
+          Reworking logging.
+
+Fri Aug 22 16:11:35 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * tests/DCPS/MultiRepoTest/TestConfig.h:
+        * tests/DCPS/MultiRepoTest/TestMonitor.cpp:
+
+          Avoid conversions from unsigned to signed type causing
+          Visual Studio compiler to emit numerous warnings.
+
+Fri Aug 22 01:57:53 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * dds/DCPS/DataSampleElement.inl:
+
+          Fix FUZZ
+
+Thu Aug 21 22:52:12 UTC 2014  Jeff Schmitz  <schmitzj@ociweb.com>
+
+        * tests/DCPS/DCPSInfoRepo/DCPSDataReaderI.cpp:
+        * tests/transport/error_handling/SimpleTransportClient.h:
+
+          Fix references to GUID_UNKNOWN.
+
+Thu Aug 21 20:01:08 UTC 2014  Byron Harris  <harrisb@ociweb.com>
+
+        * dds/DCPS/DataSampleElement.inl:
+        * dds/DCPS/DataSampleHeader.inl:
+        * dds/DCPS/RTPS/Spdp.h:
+        * dds/InfoRepo/PersistenceUpdater.cpp:
+        * performance-tests/Bench/src/Publication.cpp:
+        * performance-tests/Bench/src/StatisticalValue.h:
+        * performance-tests/Bench/src/StatisticalValue.cpp:
+        * performance-tests/Bench/src/Subscription.cpp:
+        * performance-tests/DCPS/Priority/PublicationProfile.cpp:
+        * tests/DCPS/ConfigTransports/DataReaderListener.cpp:
+        * tests/DCPS/DCPSInfoRepo/DCPSDataReaderI.cpp:
+        * tests/DCPS/FooType/Foo_Singleton_Transport.cpp:
+        * tests/DCPS/Reconnect/DataWriterListener.cpp:
+        * tests/transport/error_handling/SimpleTransportClient.h:
+        * tests/transport/rtps/publisher.cpp:
+        * tests/transport/rtps_reliability/rtps_reliability.cpp:
+
+          Address missing initialization of class members reported by Coverity.
+
+Local Variables:
+mode: change-log
+add-log-time-format: (lambda () (progn (setq tz (getenv "TZ")) (set-time-zone-rule "UTC") (setq time (format-time-string "%a %b %e %H:%M:%S %Z %Y" (current-time))) (set-time-zone-rule tz) time))
+indent-tabs-mode: nil
+End:
